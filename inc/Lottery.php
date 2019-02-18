@@ -5,8 +5,9 @@ class Lottery{
     private $bounds=array();
 
     function __construct(){
-        require ('MysqliDb.php');
-        $this->db=new MysqliDb('localhost','root','test','lottery');
+        require_once ('MysqliDb.php');
+        $cfg=include_once ('config.php');
+        $this->db=new MysqliDb($cfg['host'],$cfg['username'],$cfg['password'],$cfg['dbname']);
     }
 
     function count_available_participants($contest){
