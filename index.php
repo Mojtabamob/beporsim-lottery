@@ -1,10 +1,9 @@
 <?php
 require('./inc/Lottery.php');
 $lottery=new Lottery();
-$contest=9;
 
-$prizes=$lottery->count_available_prizes($contest);
-$participants=$lottery->count_available_participants($contest);
+$prizes=$lottery->count_available_prizes($lottery->current_contest);
+$participants=$lottery->count_available_participants($lottery->current_contest);
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +22,7 @@ $participants=$lottery->count_available_participants($contest);
     </h1>
     <h3 class="left">
         <!-- <h3> -->
-        قرعه کشی دوره <?=$contest?>
+        قرعه کشی دوره <?=$lottery->current_contest?>
         <span>با <?=$participants?> شرکت کننده</span>
         <!-- </h3> -->
     </h3>
