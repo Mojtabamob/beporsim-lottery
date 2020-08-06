@@ -3,6 +3,7 @@ class Lottery{
     private $db;
     private $rands=array();
     private $bounds=array();
+    public $current_contest=10;
 
     function __construct(){
         require_once ('MysqliDb.php');
@@ -87,9 +88,10 @@ class Lottery{
         return $stats['cnt'];
     }
 
-    function draw($contest){
+    function draw($contest=null){
+        if($contest==''){$contest=$this->current_contest;}
         $prizes=$this->available_prizes($contest);
-        if($prizes==false){return false;}
+        if($prizes==false){echo 1;return false;}
         $out=array();
         foreach($prizes as $prize){
             #User
