@@ -91,7 +91,7 @@ class Lottery{
     function draw($contest=null){
         if($contest==''){$contest=$this->current_contest;}
         $prizes=$this->available_prizes($contest);
-        if($prizes==false){echo 1;return false;}
+        if($prizes==false){return false;}
         $out=array();
         foreach($prizes as $prize){
             #User
@@ -103,7 +103,7 @@ class Lottery{
                 'user'=>array(
                     'id'=>$user['id'],
                     'name'=>$user['name'],
-                    'mobile'=>substr($user['mobile'],0,3).'***'.substr($user['mobile'],-4,4),
+                    'mobile'=>$user['mobile'],
                     'email'=>$user['email']
                 ),
                 'prize'=>$prize['name'],
@@ -112,7 +112,16 @@ class Lottery{
         }
         #Save Text
         $this->save_text($out);
+        #Masking Number
+        $out=$this->masking_number($out);
         return $out;
+    }
+
+    function masking_number($array){
+        for($i=0;$i<count($array);++$i){
+            $array[$i]['user']['mobile']=substr($array[$i]['user']['mobile'],0,3).'***'.substr($array[$i]['user']['mobile'],-4,4);
+        }
+        return $array;
     }
 
     function generate_number($id){
