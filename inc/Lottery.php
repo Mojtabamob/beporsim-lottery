@@ -23,7 +23,7 @@ class Lottery{
         $first = $this->db->getOne('participants',array('id'));
         if ($this->db->count==1){
             return $first['id'];
-        }else{return 0;}
+        }else{return 1;}
     }
 
     function select_random($contest){
@@ -34,16 +34,19 @@ class Lottery{
         }
 
         #Random ID
-        $rand=mt_rand($this->bounds[0],$this->bounds[1]);
+        do {
+            $rand = mt_rand($this->bounds[0], $this->bounds[1]);
+        }while(in_array($rand,$this->rands) || $rand > $this->bounds[1]);
+
         #NOT Select Repetitive
         if(count($this->rands)>0){
             $this->db->where('id', array('NOT IN' => $this->rands));
         }
-        $this->rands[]=$rand;
         #Query
         $this->db->where ("id", $rand);
         $user = $this->db->getOne('participants',array('id','name','email','mobile'));
         if ($this->db->count == 1){
+            $this->rands[]=$rand;
             return $user;
         }else{
             return false;
@@ -96,7 +99,6 @@ class Lottery{
         foreach($prizes as $prize){
             #User
             $user=$this->select_random($contest);
-            #Attach User to prize
             $this->update_prize($prize['id'],$user['id']);
             #Out
             $out[]=array(
